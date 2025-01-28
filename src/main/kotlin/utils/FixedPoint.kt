@@ -1,4 +1,4 @@
-package me.koendev
+package me.koendev.utils
 
 import kotlin.math.exp
 import kotlin.math.ln

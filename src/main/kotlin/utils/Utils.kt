@@ -1,4 +1,4 @@
-package me.koendev
+package me.koendev.utils
 
 import java.awt.Color
 import java.io.Serializable

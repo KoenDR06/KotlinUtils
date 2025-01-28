@@ -1,5 +1,7 @@
 package me.koendev
 
+import me.koendev.utils.length
+import me.koendev.utils.pow
 import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.test.Test

@@ -1,4 +1,4 @@
-package me.koendev
+package me.koendev.utils
 
 @Suppress("Unused")
 class Grid<T>(input: List<List<T>>): Iterable<Triple<Int,Int,T>> {
