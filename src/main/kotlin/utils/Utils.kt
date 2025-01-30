@@ -106,3 +106,7 @@ operator fun Color.times(scaler: Double): Color {
         clamp((blue * scaler), 0.0, 255.0).toInt(),
     )
 }
+
+@Suppress("Unused")
+fun Boolean.toInt() = if (this) 1 else 0
+
