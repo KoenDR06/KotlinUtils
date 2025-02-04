@@ -110,3 +110,13 @@ operator fun Color.times(scaler: Double): Color {
 @Suppress("Unused")
 fun Boolean.toInt() = if (this) 1 else 0
 
+@Suppress("Unused")
+fun <T> List<T>.toCountedMap(): Map<T, Int> {
+    val characterMap = mutableMapOf<T, Int>()
+
+    this.forEach { char ->
+        characterMap[char] = (characterMap[char] ?: 0) + 1
+    }
+
+    return characterMap
+}
