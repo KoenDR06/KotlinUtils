@@ -1,4 +1,4 @@
-package me.koendev.graph
+package me.koendev.utils.graph
 
 abstract class BaseGraph
 

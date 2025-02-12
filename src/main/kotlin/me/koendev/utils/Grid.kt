@@ -7,7 +7,6 @@ class Grid<T>(input: List<List<T>>): Iterable<Triple<Int,Int,T>> {
     val height get() = grid.size
     val width get() = grid[0].size
 
-
     init {
         for (line in input) {
             grid.add(mutableListOf())

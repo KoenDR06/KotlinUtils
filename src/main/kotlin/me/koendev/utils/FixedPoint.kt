@@ -4,14 +4,14 @@ import kotlin.math.exp
 import kotlin.math.ln
 
 private const val BITS = 64
-private const val INTEGER_BITS = 13
+var INTEGER_BITS: Int? = null
 
 @Suppress("Unused", "MemberVisibilityCanBePrivate")
 class FixedPoint {
     var number: Long = 0
 
     constructor(n: Int) {
-        number = n.toLong() shl (BITS - INTEGER_BITS)
+        number = n.toLong() shl (BITS - INTEGER_BITS!!)
     }
     constructor(n: Long) {
         number = n
@@ -20,7 +20,7 @@ class FixedPoint {
         val data = java.lang.Double.doubleToRawLongBits(d)
         number = (data and 0xFFFFFFFFFFFFF) + 4503599627370496L
 
-        val shift = 11 - INTEGER_BITS
+        val shift = 11 - INTEGER_BITS!!
         number = if (shift > 0) {
             number shl shift
         } else {
@@ -46,14 +46,14 @@ class FixedPoint {
 
     // Math operations
     fun floor(): FixedPoint {
-        number = number shr (BITS - INTEGER_BITS - 1)
-        number = number shl (BITS - INTEGER_BITS - 1)
+        number = number shr (BITS - INTEGER_BITS!! - 1)
+        number = number shl (BITS - INTEGER_BITS!! - 1)
         return this
     }
     fun ceil(): FixedPoint {
-        number = number shr (BITS - INTEGER_BITS - 1)
+        number = number shr (BITS - INTEGER_BITS!! - 1)
         number++
-        number = number shl (BITS - INTEGER_BITS - 1)
+        number = number shl (BITS - INTEGER_BITS!! - 1)
 
         return this
     }
@@ -66,7 +66,7 @@ class FixedPoint {
             absNumber += 1
         }
 
-        val firstFractionBit = (absNumber shr (BITS - INTEGER_BITS - 2)) and 0x1
+        val firstFractionBit = (absNumber shr (BITS - INTEGER_BITS!! - 2)) and 0x1
 
         return if (firstFractionBit != (1 xor (1-negative)).toLong()) {
             ceil()
@@ -76,12 +76,8 @@ class FixedPoint {
     }
 
     // Operators
-    operator fun plus(other: FixedPoint): FixedPoint {
-        return FixedPoint(number + other.number)
-    }
-    operator fun minus(other: FixedPoint): FixedPoint {
-        return FixedPoint(number - other.number)
-    }
+    operator fun plus(other: FixedPoint): FixedPoint = FixedPoint(number + other.number)
+    operator fun minus(other: FixedPoint): FixedPoint = FixedPoint(number - other.number)
     operator fun times(other: FixedPoint): FixedPoint {
         val a = number
         val aNegative = a < 0
@@ -103,7 +99,7 @@ class FixedPoint {
             higher += ub shr (BITS -i)
         }
 
-        return FixedPoint(  (lower shr (BITS - INTEGER_BITS - 1) or higher shl INTEGER_BITS).toLong() * sign )
+        return FixedPoint(  (lower shr (BITS - INTEGER_BITS!! - 1) or higher shl INTEGER_BITS!!).toLong() * sign )
     }
 
     fun toDouble(): Double {
@@ -125,7 +121,7 @@ class FixedPoint {
             }
         }
 
-        res *= 1L shl (INTEGER_BITS -2)
+        res *= 1L shl (INTEGER_BITS!! -2)
 
         if (negative) {
             res *= -1
