@@ -1,18 +1,18 @@
+@file:Suppress("Unused")
 package me.koendev.utils
 
 import java.awt.Color
+import java.io.File
 import java.io.Serializable
 import java.lang.Math.clamp
 import java.math.BigInteger
 import java.security.MessageDigest
 
-@Suppress("Unused")
 fun <T> T.println(condition: (T) -> Boolean = { true }): T {
     if (condition(this)) println(this)
     return this
 }
 
-@Suppress("Unused")
 fun findLCM(a: Long, b: Long): Long {
     if (a == 0L || b == 0L) throw IllegalArgumentException("LCM of zero does not exist.")
     val larger = if (a > b) a else b
@@ -27,7 +27,6 @@ fun findLCM(a: Long, b: Long): Long {
     return maxLcm
 }
 
-@Suppress("Unused")
 fun List<Long>.lcm(): Long {
     var result = this[0]
     for (i in 1..< this.size) {
@@ -36,11 +35,9 @@ fun List<Long>.lcm(): Long {
     return result
 }
 
-@Suppress("Unused")
 fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
     .toString(16)
 
-@Suppress("Unused")
 fun <T> List<T>.permutations(): List<List<T>> =
     if(isEmpty()) listOf(emptyList())
     else mutableListOf<List<T>>().also{ result ->
@@ -51,7 +48,6 @@ fun <T> List<T>.permutations(): List<List<T>> =
         }
     }
 
-@Suppress("Unused")
 fun MutableList<Int>.diffs(): List<Int> {
     val res = mutableListOf<Int>()
 
@@ -61,33 +57,26 @@ fun MutableList<Int>.diffs(): List<Int> {
     return res
 }
 
-@Suppress("Unused")
 data class MutablePair<A, B>(
     var first: A,
     var second: B
 ) : Serializable
 
-@Suppress("Unused")
 data class MutableTriple<A, B, C>(
     var first: A,
     var second: B,
     var third: C
 ) : Serializable
 
-@Suppress("Unused")
 val LongProgression.length: Long
     get() = (this.last - this.first) / this.step + 1
 
-@Suppress("Unused")
 fun pow(base: Int, exp: Int) = (1..exp).fold(1) { acc, _ -> acc * base }
 
-@Suppress("Unused")
 fun pow(base: Long, exp: Long) = (1..exp).fold(1L) { acc, _ -> acc * base }
 
-@Suppress("Unused")
 fun <T> List<T>.copy() = this.toMutableList()
 
-@Suppress("Unused")
 fun Color.lerp(other: Color, t: Double): Color {
     if (clamp(t, 0.0, 1.0) != t) throw IllegalArgumentException("t has to be between 0 and 1")
 
@@ -98,7 +87,6 @@ fun Color.lerp(other: Color, t: Double): Color {
     )
 }
 
-@Suppress("Unused")
 operator fun Color.times(scaler: Double): Color {
     return Color(
         clamp((red * scaler), 0.0, 255.0).toInt(),
@@ -107,10 +95,8 @@ operator fun Color.times(scaler: Double): Color {
     )
 }
 
-@Suppress("Unused")
 fun Boolean.toInt() = if (this) 1 else 0
 
-@Suppress("Unused")
 fun <T> List<T>.toCountedMap(): Map<T, Int> {
     val characterMap = mutableMapOf<T, Int>()
 
@@ -119,4 +105,83 @@ fun <T> List<T>.toCountedMap(): Map<T, Int> {
     }
 
     return characterMap
+}
+
+fun <T, LIST: Iterable<T>> LIST.assert(msg: String = "Assertion failed.", pred: (T) -> Boolean): LIST {
+    if (!this.all { pred(it) }) throw AssertionError(msg)
+
+    return this
+}
+
+fun dotEnv(): Map<String, String> {
+    val res = mutableMapOf<String, String>()
+
+    val data = File(".env").readText()
+    var index = 0
+
+    var readingKey = true
+    var key = ""
+    var value = ""
+
+    while (index < data.length) {
+        if (data[index] == '"' && !readingKey) {
+            if (value.trim().isNotEmpty()) throw Exception("Cannot open string in the middle of a value.") else value=""
+
+            index++
+            while(data[index] != '"') {
+                value += if (data[index] == '\\') {
+                    when (data[index+1]) {
+                        '\\' -> '\\'
+                        'n' -> '\n'
+                        't' -> '\t'
+                        else -> throw Exception("Unrecognized escape sequence: '\\${data[index+1]}")
+                    }
+                } else data[index]
+                index++
+            }
+
+            res[key.trim()] = value
+            key = ""
+            value = ""
+            readingKey = true
+            index++
+            continue
+        }
+
+        if (data[index] == '#') {
+            while(data[index] != '\n') index++
+            index++
+            continue
+        }
+
+        if (data[index] == '\n' && key != "") {
+            if (readingKey) throw Exception("SYNTAX ERROR: Saw 'EOL', expected: '='")
+
+            res[key.trim()] = value
+            key = ""
+            value = ""
+            readingKey = true
+            index++
+            continue
+        }
+
+        if (data[index] == '=') {
+            readingKey = false
+            index++
+            continue
+        }
+
+        if (readingKey) key += data[index] else value += data[index]
+
+        index++
+    }
+
+    res[key.trim()] = value
+
+    return res
+}
+
+
+fun main() {
+    dotEnv().println()
 }
