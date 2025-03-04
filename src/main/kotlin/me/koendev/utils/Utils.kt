@@ -180,8 +180,3 @@ fun dotEnv(): Map<String, String> {
 
     return res
 }
-
-
-fun main() {
-    dotEnv().println()
-}
