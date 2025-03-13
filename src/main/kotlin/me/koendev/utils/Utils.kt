@@ -180,3 +180,5 @@ fun dotEnv(): Map<String, String> {
 
     return res
 }
+
+operator fun Char.times(other: Int) = (0..< other).fold("") { acc, _ -> "$acc$this" }
