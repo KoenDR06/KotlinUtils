@@ -182,3 +182,6 @@ fun dotEnv(): Map<String, String> {
 }
 
 operator fun Char.times(other: Int) = (0..< other).fold("") { acc, _ -> "$acc$this" }
+
+val <T> List<T>.median: T
+    get() = this[this.size / 2]
