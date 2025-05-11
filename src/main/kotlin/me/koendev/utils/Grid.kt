@@ -11,12 +11,6 @@ class Grid<T>: Iterable<Triple<Int,Int,T>> {
         }
     }
 
-    constructor(width: Int, height: Int, value: T) {
-      for (y in 0..< height) {
-        grid.add(MutableList(width) { value })
-      }
-    }
-
     private var grid: MutableList<MutableList<T>> = mutableListOf()
 
     val height get() = grid.size
