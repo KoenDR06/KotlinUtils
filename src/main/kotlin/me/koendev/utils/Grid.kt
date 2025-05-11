@@ -16,20 +16,20 @@ class Grid<T>: Iterable<Triple<Int,Int,T>> {
     val height get() = grid.size
     val width get() = grid[0].size
 
-    fun get(x: Int, y: Int): T {
-        if (x < 0 || x > grid[0].size-1) throw IllegalArgumentException("X coordinate $x out of bounds for size ${grid[0].size}")
-        if (y < 0 || y > grid.size-1) throw IllegalArgumentException("Y coordinate $y out of bounds for size ${grid.size}")
+    fun get(x: Int, y: Int): T? {
+        if (x < 0 || x > grid[0].size-1) return null
+        if (y < 0 || y > grid.size-1) return null
         return grid[y][x]
     }
 
-    fun getRow(y: Int): List<T> {
-        if (y < 0 || y > grid.size-1) throw IllegalArgumentException("Y coordinate $y out of bounds for size ${grid.size}")
+    fun getRow(y: Int): List<T>? {
+        if (y < 0 || y > grid.size-1) return null
 
         return grid[y]
     }
 
-    fun getColumn(x: Int): List<T> {
-        if (x < 0 || x > grid[0].size-1) throw IllegalArgumentException("X coordinate $x out of bounds for size ${grid[0].size}")
+    fun getColumn(x: Int): List<T>? {
+        if (x < 0 || x > grid[0].size-1) return null
 
         val res = mutableListOf<T>()
 
