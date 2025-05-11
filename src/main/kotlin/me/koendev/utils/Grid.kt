@@ -1,13 +1,8 @@
 package me.koendev.utils
 
 @Suppress("Unused")
-class Grid<T>(input: List<List<T>>): Iterable<Triple<Int,Int,T>> {
-    private var grid: MutableList<MutableList<T>> = mutableListOf()
-
-    val height get() = grid.size
-    val width get() = grid[0].size
-
-    init {
+class Grid<T>: Iterable<Triple<Int,Int,T>> {
+    constructor(input: List<List<T>>) {
         for (line in input) {
             grid.add(mutableListOf())
             for (char in line) {
@@ -15,6 +10,17 @@ class Grid<T>(input: List<List<T>>): Iterable<Triple<Int,Int,T>> {
             }
         }
     }
+
+    constructor(width: Int, height: Int, value: T) {
+      for (y in 0..< height) {
+        grid.add(MutableList(width) { value })
+      }
+    }
+
+    private var grid: MutableList<MutableList<T>> = mutableListOf()
+
+    val height get() = grid.size
+    val width get() = grid[0].size
 
     fun get(x: Int, y: Int): T {
         if (x < 0 || x > grid[0].size-1) throw IllegalArgumentException("X coordinate $x out of bounds for size ${grid[0].size}")
