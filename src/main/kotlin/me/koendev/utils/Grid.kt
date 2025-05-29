@@ -22,6 +22,12 @@ class Grid<T>: Iterable<Triple<Int,Int,T>> {
         return grid[y][x]
     }
 
+    fun set(x: Int, y: Int, value: T) {
+        if (x < 0 || x > grid[0].size-1) return
+        if (y < 0 || y > grid.size-1) return
+        grid[y][x] = value
+    }
+
     fun getRow(y: Int): List<T>? {
         if (y < 0 || y > grid.size-1) return null
 
